@@ -2,17 +2,14 @@ use std::{any::Any, marker::PhantomData};
 
 pub trait HList {
     const LEN: usize;
-    type Constraint: HListFilter;
+    type Restriction: HListGuarantee;
 }
 
-pub struct HNil<Filter = AnyF>
-where
-    Filter: HListFilter,
-{
+pub struct HNil<Filter: HListGuarantee> {
     _phantom: PhantomData<Filter>,
 }
 
-impl<A: HListFilter> HNil<A> {
+impl<A: HListGuarantee> HNil<A> {
     pub fn new() -> Self {
         Self {
             _phantom: PhantomData,
@@ -20,9 +17,9 @@ impl<A: HListFilter> HNil<A> {
     }
 }
 
-impl<A: HListFilter> HList for HNil<A> {
+impl<A: HListGuarantee> HList for HNil<A> {
     const LEN: usize = 0;
-    type Constraint = A;
+    type Restriction = A;
 }
 
 pub struct HCons<I, Tail>
@@ -45,27 +42,22 @@ where
 impl<I, Tail> HList for HCons<I, Tail>
 where
     Tail: HList,
-    I: TInherit<<<Tail as HList>::Constraint as HListFilter>::Ty>,
+    <Tail as HList>::Restriction: AllowT<I>,
 {
     const LEN: usize = <Tail as HList>::LEN + 1;
-    type Constraint = <Tail as HList>::Constraint;
+    type Restriction = <Tail as HList>::Restriction;
 }
 
-pub trait TInherit<T: ?Sized> {}
+// marker trait for restrict HList item type
+pub trait HListGuarantee {}
 
-pub trait HListFilter {
-    type Ty: ?Sized;
-}
+// support trait of HListGuarantee
+pub trait AllowT<I> {}
 
-// Default Any Filter
-impl<A: Any> TInherit<dyn Any> for A {}
+enum AnyF {}
+impl HListGuarantee for AnyF {}
 
-// Filter impl which allow Any Trait
-pub enum AnyF {}
-
-impl HListFilter for AnyF {
-    type Ty = dyn Any;
-}
+impl<A: Any> AllowT<A> for AnyF {}
 
 #[cfg(test)]
 mod test {
@@ -78,15 +70,19 @@ mod test {
         let _ = HCons::new(1, HCons::new("test", HNil::<AnyF>::new()));
     }
 
-    impl<A: Display> TInherit<dyn Display> for A {}
-
-    pub enum DisplayF {}
-    impl HListFilter for DisplayF {
-        type Ty = dyn Display;
-    }
+    enum DisplayF {}
+    impl HListGuarantee for DisplayF {}
+    impl<A: Display> AllowT<A> for DisplayF {}
 
     #[test]
     fn displayable_filter_check() {
         let _ = HCons::new(1, HCons::new("test", HNil::<DisplayF>::new()));
     }
+
+    // struct Test {}
+
+    // #[test]
+    // fn cannot_compile() {
+    //     let _ = HCons::new(1, HCons::new(Test {}, HNil::<DisplayF>::new()));
+    // }
 }
