@@ -11,7 +11,41 @@ fn main() -> std::io::Result<()> {
     let outdir_path = Path::new(&outdir);
     write_usize_consts(&outdir_path)?;
     write_typenum_consts(&outdir_path)?;
+    write_to_usize_impl(&outdir_path)?;
 
+    Ok(())
+}
+
+fn write_to_usize_impl(outdir_path: &Path) -> std::io::Result<()> {
+    let dest = Path::new(outdir_path).join("consts_tousize.rs");
+    println!(
+        "cargo:rustc-env=TYPENUM_BUILD_CONSTS_TYPENUM_IMPLS={}",
+        dest.display()
+    );
+    let f = File::create(&dest).unwrap();
+    let mut f = BufWriter::new(f);
+
+    // usize is 64 bit
+    let mut struct_accum = "NNil".to_string();
+    let mut typearg_accum = "".to_string();
+    for i in 1..=usize::BITS {
+        let typearg = format!("BB{i} : Bit");
+        struct_accum = format!("NCons<{struct_accum}, BB{i}>");
+        typearg_accum = format!("{typearg}, {typearg_accum}");
+        write!(
+            f,
+            "
+            #[allow(dead_code)] 
+            impl< {typearg_accum} > ToUsize for {struct_accum} 
+            where
+                Self: TypedBitLength<BitLength = consts::N{i}>
+            {{
+                const OUTPUT: usize = {i};
+            }}
+            "
+        )?;
+    }
+    f.flush()?;
     Ok(())
 }
 
@@ -26,7 +60,7 @@ fn write_typenum_consts(outdir_path: &Path) -> std::io::Result<()> {
     let mut f = BufWriter::new(f);
 
     write_header(&mut f)?;
-    for i in 0..64 {
+    for i in 0..=64 {
         write!(
             f,
             "
@@ -51,7 +85,7 @@ fn write_usize_consts(outdir_path: &Path) -> std::io::Result<()> {
     let mut f = BufWriter::new(f);
 
     // let max = usize::MAX>>3;
-    let max = 1000;
+    let max = 100000;
     let sep = 1000;
 
     for chunk_index in 0..=(max / sep) {

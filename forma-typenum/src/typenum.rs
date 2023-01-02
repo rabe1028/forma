@@ -109,7 +109,6 @@ impl TypedBitLength for NNil {
     type BitLength = consts::N0;
 }
 
-#[allow(dead_code)]
 pub type BitsOf<N> = <N as TypedBitLength>::BitLength;
 
 impl<BitArr> TypedBitLength for NCons<BitArr, B0>
@@ -120,6 +119,45 @@ where
 {
     type BitLength = TSum<BitsOf<BitArr>, consts::N1>;
 }
+
+impl<BitArr> TypedBitLength for NCons<BitArr, B1>
+where
+    BitArr: NumTr + TypedBitLength,
+    BitsOf<BitArr>: Add<consts::N1>,
+    TSum<BitsOf<BitArr>, consts::N1>: NumTr,
+{
+    type BitLength = TSum<BitsOf<BitArr>, consts::N1>;
+}
+
+pub trait ToUsize: TypedBitLength {
+    const OUTPUT: usize;
+}
+
+// code generation by build/main.rs
+include!(env!("TYPENUM_BUILD_CONSTS_TYPENUM_IMPLS"));
+
+// The following code creates implementation conflicts
+// macro_rules! impl_to_usize {
+//     ($b_len: ty) => {
+//         impl<BitArr> ToUsize for NCons<BitArr, B0>
+//         where
+//             BitArr: NumTr + ToUsize,
+//             Self: TypedBitLength<BitLength = $b_len>,
+//         {
+//             const OUTPUT: usize = <BitArr as ToUsize>::OUTPUT << 1;
+//         }
+
+//         // impl<BitArr> ToUsize for NCons<BitArr, B0>
+//         // where
+//         //     BitArr: NumTr + ToUsize,
+//         //     Self: TypedBitLength<BitLength = $b_len>,
+//         // {
+//         //     const OUTPUT: usize = <BitArr as ToUsize>::OUTPUT << 1 + 1;
+//         // }
+//     };
+// }
+// impl_to_usize!(consts::N1);
+// impl_to_usize!(consts::N2);
 
 #[cfg(test)]
 mod test {
