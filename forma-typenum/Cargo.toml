@@ -1,0 +1,17 @@
+[package]
+name = "forma-typenum"
+version = "0.1.0"
+edition = "2021"
+build = "build/main.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+forma-core = { path = "../forma-core" }
+
+# [build-dependencies]
+# seq-macro = "0.3.2"
+
+[features]
+default = []
+experimental = []
