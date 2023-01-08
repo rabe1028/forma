@@ -9,8 +9,8 @@ build = "build/main.rs"
 [dependencies]
 forma-core = { path = "../forma-core" }
 
-# [build-dependencies]
-# seq-macro = "0.3.2"
+[build-dependencies]
+forma-build-utils = {path = "../forma-build-utils"}
 
 [features]
 default = []

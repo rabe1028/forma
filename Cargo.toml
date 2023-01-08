@@ -1,5 +1,7 @@
 [workspace]
 members = [
     "forma-core",
-    "forma-typenum"
+    "forma-typenum",
+    "forma-macro",
+    "forma-build-utils"
 ]
