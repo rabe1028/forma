@@ -74,6 +74,10 @@ impl Shrinkable for NCons<NNil, B0> {
     type Shrinked = NNil;
 }
 
+impl Shrinkable for NCons<NNil, B1> {
+    type Shrinked = Self;
+}
+
 impl<BitArr, B, BB> Shrinkable for NCons<NCons<BitArr, B>, BB>
 where
     B: Bit,
@@ -95,6 +99,9 @@ pub use add::*;
 
 pub mod sub;
 pub use sub::*;
+
+pub mod mul;
+pub use mul::*;
 
 mod consts {
     include!(env!("TYPENUM_BUILD_CONSTS_TYPENUM"));

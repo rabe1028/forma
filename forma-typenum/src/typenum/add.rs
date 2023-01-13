@@ -21,6 +21,17 @@ impl<A: NumTr> Add<A> for NNil {
     }
 }
 
+impl<LhsBitArr, B> Add<NNil> for NCons<LhsBitArr, B>
+where
+    LhsBitArr: NumTr,
+    B: Bit,
+{
+    type Output = Self;
+    fn add(self, _rhs: NNil) -> Self::Output {
+        self
+    }
+}
+
 impl<LhsBitArr, RhsBitArr> Add<NCons<RhsBitArr, B0>> for NCons<LhsBitArr, B0>
 where
     LhsBitArr: NumTr + Add<RhsBitArr>,
@@ -93,5 +104,8 @@ mod test {
         let n20 = N20::new();
         let _: N21 = n1 + n20;
         let _: N2 = N1::new() + N1::new();
+        let _: N1 = N0::new() + N1::new();
+        let _: N1 = N1::new() + N0::new();
+        let _: N3 = N2::new() + N1::new();
     }
 }
