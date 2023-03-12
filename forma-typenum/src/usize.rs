@@ -19,6 +19,7 @@ pub trait UsizeTr {
 
 #[cfg(feature = "experimental")]
 pub struct UsizeS<const X: usize>;
+#[cfg(not(feature = "experimental"))]
 pub struct UsizeS<X: ToUsize> {
     _phantom: PhantomData<X>,
 }
@@ -132,6 +133,7 @@ mod test {
     }
 
     #[test]
+    #[cfg(not(feature = "experimental"))]
     fn add_check() {
         let a = UsizeS::<U0>::new();
         let b = UsizeS::<U1>::new();
