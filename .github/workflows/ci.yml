@@ -14,12 +14,14 @@ jobs:
           - stable
     name: ${{ matrix.target.name }} / ${{ matrix.version }}
     runs-on: ${{ matrix.target.os }}
+    env:
+      RUST_BACKTRACE: 1
     steps:
       - uses: actions/checkout@v3.3.0
 
       - run: rustup component add rustfmt
       - run: rustup component add clippy
-      - run: cargo install cargo-nextest --locked
+      - uses: taiki-e/install-action@nextest
 
       - name: test
         run: cargo nextest run
