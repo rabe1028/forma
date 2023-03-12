@@ -4,32 +4,27 @@ on:
   push:
 
 jobs:
-  fmt:
-    runs-on: ubuntu-latest
-    needs: build_cache
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - { name: Linux, os: ubuntu-latest, triple: x86_64-unknown-linux-gnu }
+        version:
+          - stable
+      name: ${{ matrix.target.name }} / ${{ matrix.version }}
+      runs-on: ${{ matrix.target.os }}
     steps:
       - uses: actions/checkout@v3.3.0
+
       - run: rustup component add rustfmt
+      - run: rustup component add clippy
+
       - name: fmt
         run: cargo fmt --all -- --check
 
-  clippy:
-    runs-on: ubuntu-latest
-    env:
-      RUSTC_FORCE_INCREMENTAL: 1
-    needs: build_cache
-    steps:
-      - uses: actions/checkout@v3.3.0
-      - run: rustup component add clippy
       - name: clippy
         run: cargo clippy --all-targets --all-features -- -D warnings
 
-  test:
-    runs-on: ubuntu-latest
-    env:
-      RUSTC_FORCE_INCREMENTAL: 1
-    needs: build_cache
-    steps:
-      - uses: actions/checkout@v3.3.0
       - name: test
         run: cargo test --all -- --nocapture
