@@ -138,10 +138,15 @@ mod test {
         let a = UsizeS::<U0>::new();
         let b = UsizeS::<U1>::new();
         let c: UsizeS<U1> = a + b;
-        assert_eq!(c.value(), 1);
+        assert_eq!(c.value(), 2);
 
         // can't compile
         // let c = UsizeS::<{ usize::MAX }>;
         // let _ = c + a;
+    }
+
+    #[test]
+    fn fail() {
+        panic!("TEST PANIC")
     }
 }
