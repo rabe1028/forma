@@ -42,7 +42,7 @@ where
     fn add(self, rhs: NCons<RhsBitArr, B0>) -> Self::Output {
         NCons {
             arr: self.arr + rhs.arr,
-            last: B0,
+            _last: B0,
         }
     }
 }
@@ -57,7 +57,7 @@ where
     fn add(self, rhs: NCons<RhsBitArr, B0>) -> Self::Output {
         NCons {
             arr: self.arr + rhs.arr,
-            last: B1,
+            _last: B1,
         }
     }
 }
@@ -72,7 +72,7 @@ where
     fn add(self, rhs: NCons<RhsBitArr, B1>) -> Self::Output {
         NCons {
             arr: self.arr + rhs.arr,
-            last: B1,
+            _last: B1,
         }
     }
 }
@@ -81,14 +81,14 @@ impl<LhsBitArr, RhsBitArr> Add<NCons<RhsBitArr, B1>> for NCons<LhsBitArr, B1>
 where
     LhsBitArr: NumTr + Add<RhsBitArr>,
     RhsBitArr: NumTr,
-    TSum<LhsBitArr, RhsBitArr>: NumTr + Add<ONE>,
-    TSum<TSum<LhsBitArr, RhsBitArr>, ONE>: NumTr,
+    TSum<LhsBitArr, RhsBitArr>: NumTr + Add<One>,
+    TSum<TSum<LhsBitArr, RhsBitArr>, One>: NumTr,
 {
-    type Output = NCons<TSum<TSum<LhsBitArr, RhsBitArr>, ONE>, B0>;
+    type Output = NCons<TSum<TSum<LhsBitArr, RhsBitArr>, One>, B0>;
     fn add(self, rhs: NCons<RhsBitArr, B1>) -> Self::Output {
         NCons {
-            arr: self.arr + rhs.arr + ONE::new(),
-            last: B0,
+            arr: self.arr + rhs.arr + One::new(),
+            _last: B0,
         }
     }
 }

@@ -42,7 +42,7 @@ where
     fn sub(self, _rhs: NCons<RhsBitArr, B0>) -> Self::Output {
         NCons {
             arr: Shrink::<TDiff<LhsBitArr, RhsBitArr>>::new(),
-            last: B0,
+            _last: B0,
         }
     }
 }
@@ -57,23 +57,23 @@ where
     fn sub(self, _rhs: NCons<RhsBitArr, B0>) -> Self::Output {
         NCons {
             arr: Shrink::<TDiff<LhsBitArr, RhsBitArr>>::new(),
-            last: B1,
+            _last: B1,
         }
     }
 }
 
 impl<LhsBitArr, RhsBitArr> Sub<NCons<RhsBitArr, B1>> for NCons<LhsBitArr, B0>
 where
-    LhsBitArr: NumTr + Sub<TSum<RhsBitArr, ONE>>,
-    RhsBitArr: NumTr + Add<ONE>,
-    TSum<RhsBitArr, ONE>: NumTr,
-    TDiff<LhsBitArr, TSum<RhsBitArr, ONE>>: NumTr + Shrinkable,
+    LhsBitArr: NumTr + Sub<TSum<RhsBitArr, One>>,
+    RhsBitArr: NumTr + Add<One>,
+    TSum<RhsBitArr, One>: NumTr,
+    TDiff<LhsBitArr, TSum<RhsBitArr, One>>: NumTr + Shrinkable,
 {
-    type Output = NCons<Shrink<TDiff<LhsBitArr, TSum<RhsBitArr, ONE>>>, B1>;
+    type Output = NCons<Shrink<TDiff<LhsBitArr, TSum<RhsBitArr, One>>>, B1>;
     fn sub(self, _rhs: NCons<RhsBitArr, B1>) -> Self::Output {
         NCons {
-            arr: Shrink::<TDiff<LhsBitArr, TSum<RhsBitArr, ONE>>>::new(),
-            last: B1,
+            arr: Shrink::<TDiff<LhsBitArr, TSum<RhsBitArr, One>>>::new(),
+            _last: B1,
         }
     }
 }
@@ -88,7 +88,7 @@ where
     fn sub(self, _rhs: NCons<RhsBitArr, B1>) -> Self::Output {
         NCons {
             arr: Shrink::<TDiff<LhsBitArr, RhsBitArr>>::new(),
-            last: B0,
+            _last: B0,
         }
     }
 }

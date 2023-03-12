@@ -30,7 +30,7 @@ impl fmt::Display for UsizeSyntax {
         match *self {
             UsizeSyntax::Term => write!(f, "NNil"),
             UsizeSyntax::BitArray(ref inner, ref bitrepr) => {
-                write!(f, "NCons<{}, {}>", inner, bitrepr)
+                write!(f, "NCons<{inner}, {bitrepr}>")
             }
         }
     }
