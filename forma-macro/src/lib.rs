@@ -9,9 +9,7 @@ pub fn typenum(input: TokenStream) -> TokenStream {
     let usize_num: usize = input.base10_parse::<usize>().expect("Failed to parse");
 
     let typenum_struct_string = create_typenum_structs(usize_num).to_string();
-    let tkstream = typenum_struct_string.parse().unwrap();
-
-    tkstream
+    typenum_struct_string.parse().unwrap()
 }
 
 #[proc_macro]
@@ -24,7 +22,7 @@ pub fn UsizeS(input: TokenStream) -> TokenStream {
     let tkstream: TokenStream = format!("UsizeS::< {typenum_struct_string} >")
         .parse()
         .unwrap();
-    println!("{}", tkstream);
+    println!("{tkstream}");
 
     tkstream
 }

@@ -48,7 +48,7 @@ impl NumTr for NNil {
 
 pub struct NCons<BitArr: NumTr, B: Bit> {
     arr: BitArr,
-    last: B,
+    _last: B,
 }
 
 impl<BitArr: NumTr, B: Bit> NumTr for NCons<BitArr, B> {
@@ -56,7 +56,7 @@ impl<BitArr: NumTr, B: Bit> NumTr for NCons<BitArr, B> {
     fn new() -> Self {
         NCons {
             arr: BitArr::new(),
-            last: B::new(),
+            _last: B::new(),
         }
     }
 }
@@ -90,9 +90,9 @@ where
 pub type Shrink<A> = <A as Shrinkable>::Shrinked;
 
 #[allow(dead_code)]
-type ZERO = NCons<NNil, B0>;
+type Zero = NCons<NNil, B0>;
 #[allow(dead_code)]
-type ONE = NCons<NNil, B1>;
+type One = NCons<NNil, B1>;
 
 pub mod add;
 pub use add::*;
@@ -172,8 +172,8 @@ mod test {
 
     #[test]
     fn compile_check() {
-        let a: NCons<NNil, B0> = ZERO::new();
-        let b: NCons<NNil, B1> = ONE::new();
+        let a: NCons<NNil, B0> = Zero::new();
+        let b: NCons<NNil, B1> = One::new();
         let _: NCons<NNil, B1> = a + b;
     }
 }

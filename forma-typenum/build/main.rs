@@ -9,9 +9,9 @@ fn main() -> std::io::Result<()> {
 
     let outdir = env::var("OUT_DIR").unwrap();
     let outdir_path = Path::new(&outdir);
-    write_usize_consts(&outdir_path)?;
-    write_typenum_consts(&outdir_path)?;
-    write_to_usize_impl(&outdir_path)?;
+    write_usize_consts(outdir_path)?;
+    write_typenum_consts(outdir_path)?;
+    write_to_usize_impl(outdir_path)?;
 
     Ok(())
 }
@@ -99,7 +99,6 @@ fn write_usize_consts(outdir_path: &Path) -> std::io::Result<()> {
             r#"
         #[path="{}"]
         pub mod {module_name};
-        #[allow(dead_code)] 
         pub use {module_name}::*;
         "#,
             partial_dest.display()

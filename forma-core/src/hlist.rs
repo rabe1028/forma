@@ -5,6 +5,7 @@ pub trait HList {
     type Restriction: HListGuarantee;
 }
 
+#[derive(Default)]
 pub struct HNil<Filter: HListGuarantee> {
     _phantom: PhantomData<Filter>,
 }
